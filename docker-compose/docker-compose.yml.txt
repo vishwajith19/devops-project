@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql_bd:
+    image: mysql:latest
+    container_name: some-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: my_database
+    ports:
+      - "3306:3306"
+    networks:
+      - my_network
+
+  flask_app:
+    image: vishwajith19/project:vishwa  # Replace 'project' with the actual name of your Flask image
+    container_name: flask_app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql_bd
+    environment:
+      MYSQL_HOST: some-mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: my-secret-pw
+      MYSQL_DB: my_database
+      MYSQL_PORT: 3306
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
